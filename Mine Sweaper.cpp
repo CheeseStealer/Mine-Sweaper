@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <cstdlib>
 #include <ctime>
@@ -12,65 +12,50 @@ void setConsoleCursorPosition(int x, int y){
 }
 
 int main(){
-	srand(time(0));
-	int mine_Implementation = (rand() % 10 + 11);
-	int mine_PositionX = 0;
-	int mine_PositionY = 0;
-	int mine_Count = 0;
-	int location[10][10];
-	int mine_Y_Axis[10];
-	int mine_X_Axis[10];
+	srand(time(NULL));
+	int grid[10][10];
+	int num_of_mines = (rand() % 10) + 11;
+	int mine_x, mine_y;
+	int actual_mine_count = 0;
+	string cell;
+
+	cout << "Welcome to mine sweeper!" << endl << endl;
+	
+	// Initialize Grid
+	for (int i = 0; i < 10; i++) { for (int j = 0; j < 10; j++) { grid[i][j] = 0; } }
+
+	// Spawn Mines
+	for (int i = 0; i < num_of_mines; i++) {
+		mine_x = rand() % 10; mine_y = rand() % 10;
+		while (grid[mine_x][mine_y] == 1) { mine_x = rand() % 10; mine_y = rand() % 10; }
+		grid[mine_x][mine_y] = 1;
+	}
+
+	// Count mines
+	for (int i=0; i<10; i++){ for (int j=0; j<10; j++) { if (grid[i][j] == 1) actual_mine_count++; } }
+	
+	// Display grid
+	cout << "x > 1 2 3 4 5 6 7 8 9 10   y\n  |---------------------|  v" << endl;
 	for (int i = 0; i < 10; i++){
+		cout << "  | ";
 		for (int j = 0; j < 10; j++){
-			location[i][j] = 0;
+			if (grid[j][i] == 0) { cell = "~"; }
+			else { cell = "X"; }
+			cout << cell << " ";
 		}
+		cout << "|  " << i+1 << endl;
 	}
-	string loc_Disp[10][10];
-	cout << "welcome to mine sweeper!" << endl;
-	for (int i = mine_Implementation; i >= 1; i--){
-		mine_PositionY = (rand() % 10) + 1;
-		mine_PositionX = (rand() % 10) + 1;
-		while (location[mine_PositionY][mine_PositionX] == 1){
-			mine_PositionY = (rand() % 10) + 1;
-		    mine_PositionX = (rand() % 10) + 1;
-			if (location[mine_PositionY][mine_PositionX] == 0){
-				location[mine_PositionY][mine_PositionX] = 1; //mine
-			}
-		}
-		if (location[mine_PositionY][mine_PositionX] == 0){
-			location[mine_PositionY][mine_PositionX] = 1; //mine
-		}
-	}
-	for (int i = 0; i < 10; i++){
-		for (int j = 0; j < 10; j++){
-			if (location[i][j] == 1){
-				mine_Count++;
-				mine_Y_Axis[mine_Count] = i;
-				mine_X_Axis[mine_Count] = j;
-			}
-		}
-	}
-	mine_Count = mine_Count - 1;
-	cout << "1 2 3 4 5 6 7 8 9 10" << endl;
-	for (int i = 0; i < 10; i++){
-		for (int j = 0; j < 10; j++){
-			loc_Disp[i][j] = "~";
-			cout << loc_Disp[i][j] << " ";
-			if (j == 9){
-				cout << i + 1;
-			}
-		}
-		cout << endl;
-	}
-	cout << "Mines: " << mine_Count << endl << "Actual Mines: " << mine_Implementation << endl;
-	for (int i = mine_Count; i > 0; i--){
-		setConsoleCursorPosition(mine_X_Axis[i] + 1,mine_Y_Axis[i] + 1);
-		cout << "1";
-	}
-	setConsoleCursorPosition(1,13);
-	for (int i = mine_Count; i > 0; i--){
-		cout << (mine_X_Axis[i] + 1) << ", " << (mine_Y_Axis[i] + 1) << endl;
-	}
+	cout << "  |---------------------|" << endl << endl;
+
+	// Show the user how many "mines" there are and how many mines were actually spawned (for debug purposes)
+	cout << "\"Mines\": " << num_of_mines << endl << "Actual Mines: " << actual_mine_count << endl;
+	
+	// Reset the cursor back to a good starting position
+	setConsoleCursorPosition(1, 1);
+
+	// Infinate loop to keep the window open
     while (1==1) {}
+
+	// Return statement to show that everything is ok
 	return 0;
 }
